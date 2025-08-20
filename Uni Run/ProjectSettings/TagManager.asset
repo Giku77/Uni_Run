@@ -2,8 +2,13 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Ground
+  - DeadZone
+  - Sky
+  - Score
+  - GameOver
   layers:
   - Default
   - TransparentFX
@@ -38,6 +43,17 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BackGround
+    uniqueID: 335014155
+    locked: 0
+  - name: ForeGround
+    uniqueID: 454027617
+    locked: 0
+  - name: Player
+    uniqueID: 2865500631
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
+  m_RenderingLayers:
+  - Default
