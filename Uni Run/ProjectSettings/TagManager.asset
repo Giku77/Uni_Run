@@ -9,6 +9,7 @@ TagManager:
   - Sky
   - Score
   - GameOver
+  - Spawner
   layers:
   - Default
   - TransparentFX

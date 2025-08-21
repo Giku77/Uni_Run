@@ -11,7 +11,10 @@ public class Player : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rb2d;
 
+    public AudioClip dieSound; // Assign in the Inspector
+
     private GameManager gameManager;
+    private AudioSource audioSource;
 
     private bool isGrounded = true;
     private bool isDead = false;
@@ -20,6 +23,7 @@ public class Player : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -48,11 +52,17 @@ public class Player : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0) && jumpCount < maxJumps)
         {
+            rb2d.linearVelocity = Vector2.zero; // Reset velocity before jumping
             rb2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             //rb2d.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             ++jumpCount;
+            audioSource.Play();
             Debug.Log("Jump Count: " + jumpCount);
             //rb2d.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+        }
+        if (Input.GetMouseButtonUp(0) && !isGrounded)
+        {
+            rb2d.linearVelocity *= 0.5f;
         }
 
         animator.SetBool("Grounded", isGrounded);
@@ -74,7 +84,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground") && collision.contacts[0].normal.y > 0.7f)
         {
             Debug.Log("Collided with Ground");
             jumpCount = 0;
@@ -106,6 +116,7 @@ public class Player : MonoBehaviour
         rb2d.bodyType = RigidbodyType2D.Kinematic; // Stop the player from moving
         rb2d.linearVelocity = Vector2.zero; // Reset velocity to stop movement
         gameManager.OnPlayerDead();
+        audioSource.PlayOneShot(dieSound); 
     }
 
 }
