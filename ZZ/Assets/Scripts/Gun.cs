@@ -78,7 +78,14 @@ public class Gun : MonoBehaviour
            Shoot();
         }
     }
-    
+
+    public void AddAmmo(int amount)
+    {
+        currentMagazine += amount;
+        //currentMagazine = Mathf.Min(currentMagazine + amount, gunData.magazineSize);
+        Debug.Log("Ammo: " + currentAmmo + " / " + currentMagazine);
+    }
+
     private void Shoot()
     {
         Vector3 hitPos = Vector3.zero;

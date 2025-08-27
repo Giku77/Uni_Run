@@ -1,13 +1,13 @@
 using UnityEngine;
 
-//public static class TagManager
-//{
-//    public static readonly string Player = "Player";
-//    public static readonly string Enemy = "Enemy";
-//    public static readonly string Item = "Item";
-//    public static readonly string Obstacle = "Obstacle";
-//    public static readonly string Projectile = "Projectile";
-//}
+public static class TagManager
+{
+    public static readonly string Player = "Player";
+    public static readonly string Enemy = "Enemy";
+    public static readonly string Item = "Item";
+    public static readonly string Obstacle = "Obstacle";
+    public static readonly string Projectile = "Projectile";
+}
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -15,6 +15,12 @@ public class PlayerMovement : MonoBehaviour
 
     public float moveSpeed = 5f;
     public float rotationSpeed = 180f;
+
+    public AudioClip itemPickuoClip;
+    private AudioSource audioSource;
+
+    private Gun gun;
+    private PlayerHealth playerHealth;
 
     private PlayerInput playerInput;
     private Rigidbody rb;
@@ -24,11 +30,53 @@ public class PlayerMovement : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        playerHealth = GetComponent<PlayerHealth>();
+        gun = GetComponentInChildren<Gun>();
+        audioSource = GetComponent<AudioSource>();
     }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("Coin"))
+    //    {
+    //        other.gameObject.SetActive(false);
+    //        Debug.Log("Coin Collected!");
+    //        if (audioSource != null && itemPickuoClip != null)
+    //        {
+    //            audioSource.PlayOneShot(itemPickuoClip);
+    //        }
+    //    }
+    //    else if (other.CompareTag("Ammo"))
+    //    {
+    //        other.gameObject.SetActive(false);
+    //        gun.currentMagazine += 10;
+    //        Debug.Log("Ammo!");
+    //        if (audioSource != null && itemPickuoClip != null)
+    //        {
+    //            audioSource.PlayOneShot(itemPickuoClip);
+    //        }
+    //    }
+    //    else if (other.CompareTag("HealthPack"))
+    //    {
+    //        other.gameObject.SetActive(false);
+    //        playerHealth.Heal(playerHealth.MaxHealth);
+    //        Debug.Log("Health!");
+    //    }
+    //}
     private void FixedUpdate()
     {
         //회전
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, playerInput.Roatate * rotationSpeed * Time.fixedDeltaTime, 0f));
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            Vector3 target = hit.point;
+            target.y = transform.position.y; 
+
+            transform.LookAt(target);
+        }
+        //rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, playerInput.Roatate * rotationSpeed * Time.fixedDeltaTime, 0f));
         //rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, playerInput.Roatate * rotationSpeed * Time.deltaTime, 0f));
 
         //이동
