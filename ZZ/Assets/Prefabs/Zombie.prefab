@@ -614,9 +614,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHealth: 100
+  zombieData: {fileID: 11400000, guid: faa68765da4c735418eb0f88e77c0ee2, type: 2}
   traceDist: 10
   attackDist: 2
-  uiManager: {fileID: 0}
   bloodE: {fileID: 6089312352424383288}
   damage: 20
   lastAttackTime: 0

@@ -1,10 +1,12 @@
+using System.Collections;
 using UnityEngine;
 
 public class Item : MonoBehaviour, IItem
 {
     public AudioSource audioSource;
     public AudioClip itemPickupClip;
-    public UiManager uiManager;
+    private UiManager uiManager;
+    private float destroyTime = 5f;
     public enum ItemType
     {
         HealthPack,
@@ -15,6 +17,16 @@ public class Item : MonoBehaviour, IItem
     public ItemType itemType;
     public int value = 10;
 
+
+    private void Awake()
+    {
+        uiManager = GameObject.FindGameObjectWithTag("Ui").GetComponent<UiManager>();
+        if (uiManager == null)
+        {
+            Debug.LogError("UiManager not found in the scene.");
+        }
+        StartCoroutine(destroyItem());
+    }
     public void Use(GameObject target)
     {
         switch (itemType)
@@ -23,7 +35,7 @@ public class Item : MonoBehaviour, IItem
                 var playerHealth = target.GetComponent<PlayerHealth>();
                 if (playerHealth != null)
                 {
-                    playerHealth.Heal(value);
+                    playerHealth.Heal(value * 1.8f);
                 }
                 break;
             case ItemType.Ammo:
@@ -34,7 +46,8 @@ public class Item : MonoBehaviour, IItem
                 }
                 break;
             case ItemType.Coin:
-                uiManager.score += 10;
+                uiManager.score += value;
+                //uiManager.SetUpdateScore(uiManager.score + value);
                 Debug.Log("Coin Collected!");
                 break;
         }
@@ -42,6 +55,23 @@ public class Item : MonoBehaviour, IItem
         {
             audioSource.PlayOneShot(itemPickupClip);
         }
+    }
+
+    private void Update()
+    {
+        transform.position = new Vector3(transform.position.x, 0.7f + Mathf.PingPong(Time.time, 0.8f), transform.position.z);
+        transform.Rotate(Vector3.up, 60f * Time.deltaTime, Space.World);
+    }
+
+    public void setDestroyTime(float time)
+    {
+        destroyTime = time;
+    }
+
+    private IEnumerator destroyItem()
+    {
+        yield return new WaitForSeconds(destroyTime);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)

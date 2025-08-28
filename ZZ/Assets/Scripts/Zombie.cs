@@ -1,9 +1,11 @@
 using System;
-using System.Linq;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
+
 
 public class Zombie : LivingEntity
 {
@@ -13,6 +15,12 @@ public class Zombie : LivingEntity
         Trace,
         Attack,
         Die
+    }
+    private enum Type
+    {
+        Default,
+        Speed,
+        Heavy
     }
 
     private State currentState;
@@ -67,6 +75,37 @@ public class Zombie : LivingEntity
         }
     }
 
+    public void SetZombieData(ZombieData data)
+    {
+        MaxHealth = data.health;
+        Health = data.health;
+        damage = data.damage;
+        //attackDelay = data.attackDelay;
+        //traceDist = data.traceDist;
+        //attackDist = data.attackDist;
+        navMeshAgent.speed = data.speed;
+        GetComponentInChildren<Renderer>().material.color = data.skin;
+    }
+
+    //public ZombieData GetRandZombieData()
+    //{
+    //    switch (UnityEngine.Random.Range(0, 3))
+    //    {
+    //        case 0:
+    //            zombieData = Resources.Load<ZombieData>("ZombieData Default");
+    //            break;
+    //        case 1:
+    //            zombieData = Resources.Load<ZombieData>("ZombieData Speed");
+    //            break;
+    //        case 2:
+    //            zombieData = Resources.Load<ZombieData>("ZombieData Heavy");
+    //            break;
+    //        default:
+    //            zombieData = Resources.Load<ZombieData>("DefaultZombieData");
+    //            break;
+    //    }
+    //    return zombieData;
+    //}
     public void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -74,7 +113,13 @@ public class Zombie : LivingEntity
         capsuleCollider = GetComponent<CapsuleCollider>();
         audioSource = GetComponent<AudioSource>();
         uiManager = GameObject.FindGameObjectWithTag("Ui").GetComponent<UiManager>();
-        uiManager.leftEnemy++;
+        //uiManager.leftEnemy++;
+        //System.Random rnd = new System.Random();
+
+        //zombieData = Resources.LoadAll<ZombieData>("").OrderBy(x => rnd.Next()).FirstOrDefault();
+       
+        //zombieData = Resources.Load<ZombieData>("ZombieData Speed");
+        //SetZombieData(zombieData);  
     }
 
     private IEnumerator bloodEffect(Vector3 hitpos)
@@ -183,15 +228,17 @@ public class Zombie : LivingEntity
         //Destroy(healthSlider);
         //Destroy(capsuleCollider);
         state = State.Die;
+        //uiManager.SetUpdateScore(uiManager.score + 10);
         uiManager.score += 10;
-        uiManager.leftEnemy--;
-        StartCoroutine(onDead());
+        //uiManager.leftEnemy--;
+        //StartCoroutine(onDead());
     }
 
     private IEnumerator onDead()
     {
         yield return new WaitForSeconds(5.0f);
-        gameObject.SetActive(false);
+        Destroy(gameObject);
+        //gameObject.SetActive(false);
     }
 
     public LayerMask targetPlayer;

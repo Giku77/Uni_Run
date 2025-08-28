@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Gun : MonoBehaviour
 {
+
+    public UiManager uiManager;
     public enum State
     {
         Ready,
@@ -47,6 +49,7 @@ public class Gun : MonoBehaviour
         currentMagazine = gunData.magazineSize;
         currentState = State.Ready;
         lastFireTime = 0f;
+        uiManager.SetAmmoText(currentAmmo, currentMagazine);
     }
 
     private void Update()
@@ -84,6 +87,7 @@ public class Gun : MonoBehaviour
         currentMagazine += amount;
         //currentMagazine = Mathf.Min(currentMagazine + amount, gunData.magazineSize);
         Debug.Log("Ammo: " + currentAmmo + " / " + currentMagazine);
+        uiManager.SetAmmoText(currentAmmo, currentMagazine);
     }
 
     private void Shoot()
@@ -112,6 +116,7 @@ public class Gun : MonoBehaviour
 
         currentAmmo--;
         Debug.Log("Ammo: " + currentAmmo + " / " + currentMagazine);
+        uiManager.SetAmmoText(currentAmmo, currentMagazine);
         if (currentAmmo <= 0)
         {
             currentState = State.Empty;
@@ -134,7 +139,8 @@ public class Gun : MonoBehaviour
         audioSource.PlayOneShot(gunData.reloadSound);
 
         yield return new WaitForSeconds(gunData.reloadTime);
-        int ammoNeeded = gunData.magazineSize - currentAmmo;
+        //int ammoNeeded = gunData.magazineSize - currentAmmo;
+        int ammoNeeded = gunData.startingAmmo - currentAmmo;
         if (currentMagazine >= ammoNeeded)
         {
             currentAmmo += ammoNeeded;
@@ -146,6 +152,7 @@ public class Gun : MonoBehaviour
             currentMagazine = 0;
         }
         Debug.Log("Ammo: " + currentAmmo + " / " + currentMagazine);
+        uiManager.SetAmmoText(currentAmmo, currentMagazine);
         currentState = State.Ready;
     }
 

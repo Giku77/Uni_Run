@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8027547951744607728}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.371, y: 1, z: 0.5}
+  m_LocalRotation: {x: -0, y: -0.97890306, z: -0, w: -0.2043253}
+  m_LocalPosition: {x: 0, y: 1.2870007, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -50,7 +50,7 @@ MonoBehaviour:
   audioSource: {fileID: 681218623134931077}
   itemPickupClip: {fileID: 8300000, guid: 519ad2e4de69341948a938bf2a31e33b, type: 3}
   itemType: 0
-  value: 10
+  value: 15
 --- !u!135 &1330814784850833054
 SphereCollider:
   m_ObjectHideFlags: 0
